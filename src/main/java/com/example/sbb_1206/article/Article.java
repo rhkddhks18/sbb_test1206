@@ -22,4 +22,7 @@ public class Article {
     @ManyToOne
     private SiteUser author;
     private LocalDateTime modifyDate;
+
+    private String imgName;
+    private String imgPath;
 }

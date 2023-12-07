@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
@@ -44,12 +45,13 @@ public class ArticleController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid ArticleForm articleForm, BindingResult bindingResult, Principal principal){
+    public String create(Article article, @Valid ArticleForm articleForm, BindingResult bindingResult, Principal principal, @RequestParam("imgFile") MultipartFile imgFile) throws Exception {
         if (bindingResult.hasErrors()) {
             return "article_form";
         }
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.articleService.create(articleForm.getTitle(), articleForm.getContent(), siteUser);
+        this.articleService.saveImg(article, imgFile);
         return "redirect:/article/list";
     }
 
